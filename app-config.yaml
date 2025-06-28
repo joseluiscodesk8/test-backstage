@@ -50,15 +50,15 @@ integrations:
     # - host: ghe.example.net
     #   apiBaseUrl: https://ghe.example.net/api/v3
     #   token: ${GHE_TOKEN}
-proxy:
-  '/argocd/api':
-    target: https://argocd-internal.pukara.dev/api/v1/
-    changeOrigin: true
-    # only if your argocd api has self-signed cert
-    secure: true
-    headers:
-      Cookie:
-        $env: argocd.token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJhcmdvY2QiLCJzdWIiOiJhZG1pbjphcGlLZXkiLCJuYmYiOjE3NTA0NDM3MzAsImlhdCI6MTc1MDQ0MzczMCwianRpIjoiZWQ5YWY0ZjUtM2U5Yy00Y2U3LTlhOTQtNGE0ZTMyMDY2ZWFkIn0.-ZmjurA7gzNg0pIDE__OcUdPva5wayFtOPkP1fuSpfI
+# proxy:
+#   '/argocd/api':
+#     target: https://argocd-internal.pukara.dev/api/v1/
+#     changeOrigin: true
+#     # only if your argocd api has self-signed cert
+#     secure: true
+#     headers:
+#       Cookie:
+#         $env: 
 # proxy:
   ### Example for how to add a proxy endpoint for the frontend.
   ### A typical reason to do this is to handle HTTPS and CORS for internal services.
