@@ -86,8 +86,8 @@ auth:
     guest: {}
     github:
       development:
-        clientId: Ov23liEacGzUVrpxIZeN
-        clientSecret: ac869bb5ba24f6b3e40b63b3614a96411dd1ba4c
+        clientId: ${GITHUB_CLIENT_ID}
+        clientSecret: ${GITHUB_CLIENT_SECRET}
         signIn:
           resolvers:
             # Matches the GitHub username with the Backstage user entity name.
