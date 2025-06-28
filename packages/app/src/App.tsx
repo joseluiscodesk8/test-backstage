@@ -36,8 +36,23 @@ import { CatalogGraphPage } from '@backstage/plugin-catalog-graph';
 import { RequirePermission } from '@backstage/plugin-permission-react';
 import { catalogEntityCreatePermission } from '@backstage/plugin-catalog-common/alpha';
 
+import { githubAuthApiRef } from '@backstage/core-plugin-api';
+import { myTheme } from './theme';
+import LightIcon from '@material-ui/icons/WbSunny';
+import { UnifiedThemeProvider} from '@backstage/theme';
+import { LifecycleCardPage } from '@internal/plugin-lifecycle-card';
+
 const app = createApp({
   apis,
+     themes: [{
+    id: 'my-theme',
+    title: 'My Custom Theme',
+    variant: 'light',
+    icon: <LightIcon />,
+    Provider: ({ children }) => (
+      <UnifiedThemeProvider theme={myTheme} children={children} />
+    ),
+  }],
   bindRoutes({ bind }) {
     bind(catalogPlugin.externalRoutes, {
       createComponent: scaffolderPlugin.routes.root,
@@ -56,7 +71,35 @@ const app = createApp({
     });
   },
   components: {
-    SignInPage: props => <SignInPage {...props} auto providers={['guest']} />,
+    SignInPage: props => (
+  <SignInPage
+    {...props}
+    auto
+    providers={[
+      'guest',
+      {
+        id: 'github-auth-provider',
+        title: 'GitHub',
+        message: 'Sign in using GitHub',
+        apiRef: githubAuthApiRef,
+      },
+    ]}
+  />
+),
+
+  //   SignInPage: props => <SignInPage {...props} auto providers={['guest']} />,
+  //   //  SignInPage: props => (
+  //   // <SignInPage
+  //   //   {...props}
+  //   //   auto
+  //   //   provider={{
+  //   //     id: 'github-auth-provider',
+  //   //     title: 'GitHub',
+  //   //     message: 'Sign in using GitHub',
+  //   //     apiRef: githubAuthApiRef,
+  //   //   }}
+  //   // />
+  // // ),
   },
 });
 
@@ -79,7 +122,7 @@ const routes = (
         <ReportIssue />
       </TechDocsAddons>
     </Route>
-    <Route path="/create" element={<ScaffolderPage />} />
+    <Route path="/skate" element={<ScaffolderPage />} />
     <Route path="/api-docs" element={<ApiExplorerPage />} />
     <Route
       path="/catalog-import"
@@ -94,6 +137,7 @@ const routes = (
     </Route>
     <Route path="/settings" element={<UserSettingsPage />} />
     <Route path="/catalog-graph" element={<CatalogGraphPage />} />
+    <Route path="/lifecycle-card" element={<LifecycleCardPage />} />
   </FlatRoutes>
 );
 
@@ -104,5 +148,6 @@ export default app.createRoot(
     <AppRouter>
       <Root>{routes}</Root>
     </AppRouter>
+
   </>,
 );

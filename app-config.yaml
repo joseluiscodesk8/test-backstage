@@ -3,9 +3,10 @@ app:
   baseUrl: http://localhost:3000
 
 organization:
-  name: My Company
+  name: pukara
 
 backend:
+
   # Used for enabling authentication, secret is shared by all backend plugins
   # See https://backstage.io/docs/auth/service-to-service-auth for
   # information on the format
@@ -30,6 +31,13 @@ backend:
   database:
     client: better-sqlite3
     connection: ':memory:'
+    # client: pg
+    # connection:
+    #   host: 127.0.0.1
+    #   port: 5432
+    #   user: postgres
+    #   password: supersegura123
+    #   database: backstage
   # workingDirectory: /tmp # Use this to configure a working directory for the scaffolder, defaults to the OS temp-dir
 
 integrations:
@@ -42,8 +50,16 @@ integrations:
     # - host: ghe.example.net
     #   apiBaseUrl: https://ghe.example.net/api/v3
     #   token: ${GHE_TOKEN}
-
 proxy:
+  '/argocd/api':
+    target: https://argocd-internal.pukara.dev/api/v1/
+    changeOrigin: true
+    # only if your argocd api has self-signed cert
+    secure: true
+    headers:
+      Cookie:
+        $env: argocd.token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJhcmdvY2QiLCJzdWIiOiJhZG1pbjphcGlLZXkiLCJuYmYiOjE3NTA0NDM3MzAsImlhdCI6MTc1MDQ0MzczMCwianRpIjoiZWQ5YWY0ZjUtM2U5Yy00Y2U3LTlhOTQtNGE0ZTMyMDY2ZWFkIn0.-ZmjurA7gzNg0pIDE__OcUdPva5wayFtOPkP1fuSpfI
+# proxy:
   ### Example for how to add a proxy endpoint for the frontend.
   ### A typical reason to do this is to handle HTTPS and CORS for internal services.
   # endpoints:
@@ -64,11 +80,21 @@ techdocs:
 
 auth:
   # see https://backstage.io/docs/auth/ to learn about auth providers
+  environment: development
   providers:
     # See https://backstage.io/docs/auth/guest/provider
     guest: {}
+    github:
+      development:
+        clientId: Ov23liEacGzUVrpxIZeN
+        clientSecret: ac869bb5ba24f6b3e40b63b3614a96411dd1ba4c
+        signIn:
+          resolvers:
+            # Matches the GitHub username with the Backstage user entity name.
+            # See https://backstage.io/docs/auth/github/provider#resolvers for more resolvers.
+            - resolver: usernameMatchingUserEntityName
 
-scaffolder:
+# scaffolder:
   # see https://backstage.io/docs/features/software-templates/configuration for software template options
 
 catalog:
@@ -80,20 +106,41 @@ catalog:
   locations:
     # Local example data, file locations are relative to the backend process, typically `packages/backend`
     - type: file
-      target: ../../examples/entities.yaml
-
-    # Local example template
+      target: ../../examples/components.yaml
+    - type: file
+      target: ../../examples/systems.yaml
+    - type: file
+      target: ../../examples/domains.yaml
+    - type: file
+      target: ../../examples/resources.yaml
+    - type: file
+      target: ../../examples/apis.yaml
+  #Local example template
     - type: file
       target: ../../examples/template/template.yaml
       rules:
-        - allow: [Template]
-
-    # Local example organizational data
+       - allow: [Template]
+  #Local example organizational data
     - type: file
       target: ../../examples/org.yaml
       rules:
         - allow: [User, Group]
-
+  providers:
+    githubOrg:
+      - id: production
+        githubUrl: https://github.com
+        orgs: ['patinar']
+        schedule:
+          initialDelay: { seconds: 30 }
+          frequency: { hours: 1 }
+          timeout: { minutes: 50 }
+      - id: ghe
+        githubUrl: https://github.com/joseluiscodesk8
+        orgs: ['skate']
+        schedule:
+          initialDelay: { seconds: 30 }
+          frequency: { hours: 1 }
+          timeout: { minutes: 50 }
     ## Uncomment these lines to add more example data
     # - type: url
     #   target: https://github.com/backstage/backstage/blob/master/packages/catalog-model/examples/all.yaml
@@ -107,7 +154,7 @@ catalog:
   # New adopters are encouraged to enable it as this behavior will be the default in a future release.
   useUrlReadersSearch: true
 
-kubernetes:
+# kubernetes:
   # see https://backstage.io/docs/features/kubernetes/configuration for kubernetes configuration options
 
 # see https://backstage.io/docs/permissions/getting-started for more on the permission framework

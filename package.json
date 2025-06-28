@@ -6,6 +6,7 @@
     "node": "20 || 22"
   },
   "scripts": {
+    "dev": "yarn workspaces foreach -A --include backend --include app --parallel -v -i run start",
     "start": "backstage-cli repo start",
     "build:backend": "yarn workspace backend build",
     "build:all": "backstage-cli repo build --all",
@@ -32,6 +33,7 @@
     "@backstage/cli": "^0.32.1",
     "@backstage/e2e-test-utils": "^0.1.1",
     "@playwright/test": "^1.32.3",
+    "@types/recharts": "^2.0.1",
     "node-gyp": "^10.0.0",
     "prettier": "^2.3.2",
     "typescript": "~5.8.0"
@@ -50,5 +52,10 @@
       "prettier --write"
     ]
   },
-  "packageManager": "yarn@4.4.1"
+  "packageManager": "yarn@4.4.1",
+  "dependencies": {
+    "@roadiehq/backstage-plugin-github-pull-requests": "^3.4.2",
+    "dotenv": "^16.5.0",
+    "recharts": "^3.0.0"
+  }
 }
