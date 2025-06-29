@@ -10,7 +10,7 @@ metadata:
       icon: docs
   annotations:
     github.com/project-slug: pukara-dev/backstage
-    backstage.io/techdocs-ref: dir:docs
+    backstage.io/techdocs-ref: dir:.
   tags:
     - k8s
     - idp
